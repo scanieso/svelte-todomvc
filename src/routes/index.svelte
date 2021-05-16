@@ -1,16 +1,41 @@
 <script>
-	const todos = [
-		{ id: '1', name: 'Meal prep', done: false },
-		{ id: '2', name: 'Take out recycling', done: false },
-	];
+	let newTodoName = '';
+
+	$: todos = [];
 
 	$: incompleteTodos = todos.filter((todo) => todo.done === false);
+
+	const submitForm = (e) => {
+		e.preventDefault();
+		addTodo();
+		clearNewTodo();
+	};
+
+	const addTodo = () => {
+		todos = [
+			...todos,
+			{
+				id: 'todo-' + todos.length.toString(),
+				name: newTodoName,
+				done: false
+			}
+		];
+	};
+
+	const clearNewTodo = () => {
+		newTodoName = '';
+	}
 </script>
 
 <section class="todoapp">
 	<header class="header">
 		<h1>todos</h1>
-		<input class="new-todo" placeholder="What needs to be done?" />
+		<form on:submit="{submitForm}">
+			<input
+				class="new-todo"
+				placeholder="What needs to be done?"
+				bind:value={newTodoName} />
+		</form>
 	</header>
 
 	<section class="main">
