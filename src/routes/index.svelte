@@ -1,7 +1,7 @@
 <script>
 	let newTodoName = '';
 
-	$: todos = [];
+	let todos = [];
 
 	$: incompleteTodos = todos.filter((todo) => todo.done === false);
 
@@ -15,6 +15,7 @@
 		todos = [
 			...todos,
 			{
+				// TODO Make ID more unique
 				id: 'todo-' + todos.length.toString(),
 				name: newTodoName,
 				done: false
@@ -22,9 +23,13 @@
 		];
 	};
 
+	const removeTodo = (id) => {
+		todos = todos.filter(todo => todo.id !== id);
+	};
+
 	const clearNewTodo = () => {
 		newTodoName = '';
-	}
+	};
 </script>
 
 <section class="todoapp">
@@ -53,30 +58,32 @@
 							bind:checked={todo.done}
 							id={'todo-' + todo.id} />
 						<label for="{'todo-' + todo.id}">{todo.name}</label>
-						<button class="destroy" />
+						<button class="destroy" on:click={() => removeTodo(todo.id)} />
 					</div>
 				</li>
 			{/each}
 		</ul>
 	</section>
 
-	<footer class="footer">
-		<span class="todo-count">
-			<strong>{incompleteTodos.length}</strong>
-			item{incompleteTodos.length === 1 ? '' : 's'} left
-		</span>
+	{#if todos.length}
+		<footer class="footer">
+			<span class="todo-count">
+				<strong>{incompleteTodos.length}</strong>
+				item{incompleteTodos.length === 1 ? '' : 's'} left
+			</span>
 
-		<ul class="filters">
-			<li>
-				<a href="#/" class="selected">All</a>
-			</li>
-			<li>
-				<a href="#/active">Active</a>
-			</li>
-			<li>
-				<a href="#/completed">Completed</a>
-			</li>
-		</ul>
-		<button class="clear-completed" style="display: none;" />
-	</footer>
+			<ul class="filters">
+				<li>
+					<a href="#/" class="selected">All</a>
+				</li>
+				<li>
+					<a href="#/active">Active</a>
+				</li>
+				<li>
+					<a href="#/completed">Completed</a>
+				</li>
+			</ul>
+			<button class="clear-completed" style="display: none;" />
+		</footer>
+	{/if}
 </section>
