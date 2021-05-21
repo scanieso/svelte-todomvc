@@ -1,6 +1,7 @@
 <script>
   import Filter from '../components/Filter.svelte';
   import NewTodoForm from '../components/NewTodoForm.svelte';
+  import TodoList from '../components/TodoList.svelte';
 
   let todosFilter = '';
 
@@ -16,23 +17,8 @@
     { name: 'Completed', filterBy: 'completed' },
   ];
 
-  $: visibleTodos = todos.filter((todo) => {
-    switch (todosFilter) {
-      case 'active':
-        return todo.done === false;
-      case 'completed':
-        return todo.done === true;
-      default:
-        return true;
-    }
-  });
-
   $: completeTodos = todos.filter((todo) => todo.done === true);
   $: incompleteTodos = todos.filter((todo) => todo.done === false);
-
-  const submitForm = (newTodoName) => {
-    addTodo(newTodoName);
-  };
 
   const addTodo = (newTodoName) => {
     todos = [
@@ -60,26 +46,17 @@
 </header>
 
 <section class="todoapp">
-  <NewTodoForm onSubmit={submitForm} />
+  <NewTodoForm onSubmit={addTodo} />
 
   <section class="main">
     <!-- TODO -->
     <!-- <input id="toggle-all" class="toggle-all" type="checkbox" /> -->
     <!-- <label for="toggle-all">Mark all as complete</label> -->
 
-    <ul class="todo-list">
-      {#each visibleTodos as todo, i}
-        <li class="todo {todo.done ? 'completed' : ''}">
-          <input
-            class="toggle"
-            type="checkbox"
-            bind:checked={todo.done}
-            id={'todo-' + todo.id} />
-          <label for="{'todo-' + todo.id}">{todo.name}</label>
-          <button class="destroy" on:click={() => removeTodo(todo.id)} />
-        </li>
-      {/each}
-    </ul>
+    <TodoList
+      todos={todos}
+      onRemoveTodo={removeTodo}
+    />
   </section>
 
   {#if todos.length}
