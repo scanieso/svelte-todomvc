@@ -1,11 +1,23 @@
 <script>
-	let newTodoName = '';
+	import Filter from '../components/Filter.svelte';
 
-	let todos = [];
-	let filter = '';
+	let newTodoName = '';
+	let todosFilter = '';
+
+	let todos = [
+		{ name: 'One', done: false },
+		{ name: 'Two', done: true },
+		{ name: 'Three', done: false },
+	];
+
+	const filters = [
+		{ name: 'All', filterBy: '' },
+		{ name: 'Active', filterBy: 'active' },
+		{ name: 'Completed', filterBy: 'completed' },
+	];
 
 	$: visibleTodos = todos.filter((todo) => {
-		switch (filter) {
+		switch (todosFilter) {
 			case 'active':
 				return todo.done === false;
 			case 'completed':
@@ -94,27 +106,17 @@
 			</span>
 
 			<ul class="filters">
-				<li>
-					<button
-						class="filter { filter === '' ? 'selected' : ''}"
-						on:click={() => filter = ''}>
-						All
-					</button>
-				</li>
-				<li>
-					<button
-						class="filter { filter === 'active' ? 'selected' : ''}"
-						on:click={() => filter = 'active'}>
-						Active
-					</button>
-				</li>
-				<li>
-					<button
-						class="filter { filter === 'completed' ? 'selected' : ''}"
-						on:click={() => filter = 'completed'}>
-						Completed
-					</button>
-				</li>
+				{#each filters as filter}
+					<li>
+						<Filter
+							on:click={() => todosFilter = filter.filterBy}
+							selectedFilter="{todosFilter}"
+							filter="{filter.filterBy}"
+						>
+							{filter.name}
+						</Filter>
+					</li>
+				{/each}
 			</ul>
 
 			{#if completeTodos.length > 0}
