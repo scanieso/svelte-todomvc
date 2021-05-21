@@ -6,6 +6,7 @@
 <button
   class="filter { selectedFilter === filter ? 'selected' : ''}"
   on:click
+  data-testid="filter"
 >
   <slot></slot>
 </button>
