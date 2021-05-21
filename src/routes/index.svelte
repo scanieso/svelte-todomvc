@@ -1,7 +1,7 @@
 <script>
   import Filter from '../components/Filter.svelte';
+  import NewTodoForm from '../components/NewTodoForm.svelte';
 
-  let newTodoName = '';
   let todosFilter = '';
 
   let todos = [
@@ -30,17 +30,11 @@
   $: completeTodos = todos.filter((todo) => todo.done === true);
   $: incompleteTodos = todos.filter((todo) => todo.done === false);
 
-  const submitForm = (e) => {
-    e.preventDefault();
-    addTodo();
-    clearNewTodo();
+  const submitForm = (newTodoName) => {
+    addTodo(newTodoName);
   };
 
-  const addTodo = () => {
-    if (newTodoName.trim().length === 0) {
-      return;
-    }
-
+  const addTodo = (newTodoName) => {
     todos = [
       ...todos,
       {
@@ -56,10 +50,6 @@
     todos = todos.filter(todo => todo.id !== id);
   };
 
-  const clearNewTodo = () => {
-    newTodoName = '';
-  };
-
   const clearCompleted = () => {
     todos = incompleteTodos;
   };
@@ -68,12 +58,7 @@
 <section class="todoapp">
   <header class="header">
     <h1>todos</h1>
-    <form on:submit="{submitForm}">
-      <input
-        class="new-todo"
-        placeholder="What needs to be done?"
-        bind:value={newTodoName} />
-    </form>
+    <NewTodoForm onSubmit={submitForm} />
   </header>
 
   <section class="main">
