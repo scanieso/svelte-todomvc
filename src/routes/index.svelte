@@ -5,9 +5,9 @@
   let todosFilter = '';
 
   let todos = [
-    { name: 'One', done: false },
-    { name: 'Two', done: true },
-    { name: 'Three', done: false },
+    { id: '1', name: 'One', done: false },
+    { id: '2', name: 'Two', done: true },
+    { id: '3', name: 'Three', done: false },
   ];
 
   const filters = [
@@ -55,11 +55,12 @@
   };
 </script>
 
+<header class="header">
+  <h1 class="logo">todos</h1>
+</header>
+
 <section class="todoapp">
-  <header class="header">
-    <h1>todos</h1>
-    <NewTodoForm onSubmit={submitForm} />
-  </header>
+  <NewTodoForm onSubmit={submitForm} />
 
   <section class="main">
     <!-- TODO -->
@@ -68,16 +69,14 @@
 
     <ul class="todo-list">
       {#each visibleTodos as todo, i}
-        <li class={todo.done ? 'completed' : ''}>
-          <div>
-            <input
-              class="toggle"
-              type="checkbox"
-              bind:checked={todo.done}
-              id={'todo-' + todo.id} />
-            <label for="{'todo-' + todo.id}">{todo.name}</label>
-            <button class="destroy" on:click={() => removeTodo(todo.id)} />
-          </div>
+        <li class="todo {todo.done ? 'completed' : ''}">
+          <input
+            class="toggle"
+            type="checkbox"
+            bind:checked={todo.done}
+            id={'todo-' + todo.id} />
+          <label for="{'todo-' + todo.id}">{todo.name}</label>
+          <button class="destroy" on:click={() => removeTodo(todo.id)} />
         </li>
       {/each}
     </ul>
@@ -104,13 +103,15 @@
         {/each}
       </ul>
 
-      {#if completeTodos.length > 0}
-        <button
-          class="clear-completed"
-          on:click={clearCompleted}>
-          Clear completed
-        </button>
-      {/if}
+      <div>
+        {#if completeTodos.length > 0}
+          <button
+            class="clear-completed"
+            on:click={clearCompleted}>
+            Clear completed
+          </button>
+        {/if}
+    </div>
     </footer>
   {/if}
 </section>

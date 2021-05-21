@@ -5,9 +5,7 @@
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log('submitting with', todoName);
     if (todoName.trim().length < 1) {
-      console.log('Cannot submit without value');
       return;
     }
 
