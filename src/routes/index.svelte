@@ -2,7 +2,20 @@
 	let newTodoName = '';
 
 	let todos = [];
+	let filter = '';
 
+	$: visibleTodos = todos.filter((todo) => {
+		switch (filter) {
+			case 'active':
+				return todo.done === false;
+			case 'completed':
+				return todo.done === true;
+			default:
+				return true;
+		}
+	});
+
+	$: completeTodos = todos.filter((todo) => todo.done === true);
 	$: incompleteTodos = todos.filter((todo) => todo.done === false);
 
 	const submitForm = (e) => {
@@ -12,6 +25,10 @@
 	};
 
 	const addTodo = () => {
+		if (newTodoName.trim().length === 0) {
+			return;
+		}
+
 		todos = [
 			...todos,
 			{
@@ -29,6 +46,10 @@
 
 	const clearNewTodo = () => {
 		newTodoName = '';
+	};
+
+	const clearCompleted = () => {
+		todos = incompleteTodos;
 	};
 </script>
 
@@ -49,7 +70,7 @@
 		<!-- <label for="toggle-all">Mark all as complete</label> -->
 
 		<ul class="todo-list">
-			{#each todos as todo, i}
+			{#each visibleTodos as todo, i}
 				<li class={todo.done ? 'completed' : ''}>
 					<div>
 						<input
@@ -74,16 +95,35 @@
 
 			<ul class="filters">
 				<li>
-					<a href="#/" class="selected">All</a>
+					<button
+						class="filter { filter === '' ? 'selected' : ''}"
+						on:click={() => filter = ''}>
+						All
+					</button>
 				</li>
 				<li>
-					<a href="#/active">Active</a>
+					<button
+						class="filter { filter === 'active' ? 'selected' : ''}"
+						on:click={() => filter = 'active'}>
+						Active
+					</button>
 				</li>
 				<li>
-					<a href="#/completed">Completed</a>
+					<button
+						class="filter { filter === 'completed' ? 'selected' : ''}"
+						on:click={() => filter = 'completed'}>
+						Completed
+					</button>
 				</li>
 			</ul>
-			<button class="clear-completed" style="display: none;" />
+
+			{#if completeTodos.length > 0}
+				<button
+					class="clear-completed"
+					on:click={clearCompleted}>
+					Clear completed
+				</button>
+			{/if}
 		</footer>
 	{/if}
 </section>
