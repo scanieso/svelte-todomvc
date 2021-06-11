@@ -55,6 +55,7 @@
 
     <TodoList
       todos={todos}
+      filter={todosFilter}
       onRemoveTodo={removeTodo}
     />
   </section>
